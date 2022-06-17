@@ -12,10 +12,10 @@
 "ports": {
     "STRATUMPORTVAR": {
         "tls":false,
-        "diff": 0.05,
+        "diff": 68,
         "varDiff": {
-            "minDiff": 0.04,
-            "maxDiff": 16,
+            "minDiff": 60,
+            "maxDiff": 288,
             "targetTime": 15,
             "retargetTime": 60,
             "variancePercent": 30

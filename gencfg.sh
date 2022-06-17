@@ -3,10 +3,11 @@
 walletaddress=
 
 #Change to path of komodo-cli here
-komodoexec=~/komodo/src/komodo-cli
+komodoexec=$HOME/komodo/src/komodo-cli
 
 # Any coins you would like to skip go here
-declare -a skip=("BEER" "PIZZA")
+#THC & GLEEC are PoS
+declare -a skip=("THC" "GLEEC")
 
 # Stratum port to start with
 stratumport=3030
@@ -41,14 +42,14 @@ fi
 
 listassetchains () {
   if [[ $specificchain = "0" ]]; then
-    ~/komodo/src/listassetchains
+    $HOME/komodo/src/listassetchains
   else
     echo $specificchain
   fi
 }
 
 listassetchains | while read chain; do
-  if [[ " ${skip[@]} " =~ " ${chain} " ]]; then
+  if [[ " ${skip[@]} " =$HOME " ${chain} " ]]; then
     pointless=0
   else
     echo  "[$chain] Generating config files"
@@ -60,16 +61,16 @@ listassetchains | while read chain; do
        continue
     fi
 
-    string=$(printf '%08x\n' $(echo $getinfo | jq '.magic'))
+    string=$(printf '%08x\n' $(jq '.magic' <<<"${getinfo}"))
     magic=${string: -8}
     magicrev=$(echo ${magic:6:2}${magic:4:2}${magic:2:2}${magic:0:2})
 
-    p2pport=$(echo $getinfo | jq '.p2pport')
-    thisconf=$(<~/.komodo/$chain/$chain.conf)
+    p2pport=$(jq '.p2pport' <<<"${getinfo}")
+    thisconf=$(<$HOME/.komodo/$chain/$chain.conf)
 
-        rpcuser=$(echo $thisconf | grep -Po "rpcuser=(\S*)" | sed 's/rpcuser=//')
-        rpcpass=$(echo $thisconf | grep -Po "rpcpassword=(\S*)" | sed 's/rpcpassword=//')
-        rpcport=$(echo $thisconf | grep -Po "rpcport=(\S*)" | sed 's/rpcport=//')
+        rpcuser=$(grep -Po "rpcuser=(\S*)" | sed 's/rpcuser=//' <<<"${thisconf}")
+        rpcpass=$(grep -Po "rpcpassword=(\S*)" | sed 's/rpcpassword=//' <<<"${thisconf}")
+        rpcport=$(grep -Po "rpcport=(\S*)" | sed 's/rpcport=//' <<<"${thisconf}")
 
         echo "$cointemplate" | sed "s/COINNAMEVAR/$chain/" | sed "s/MAGICREVVAR/$magicrev/" > $coinsdir/$chain.json
         echo "$pooltemplate" | sed "s/P2PPORTVAR/$p2pport/" | sed "s/COINNAMEVAR/$chain/" | sed "s/WALLETADDRVAR/$walletaddress/" | sed "s/STRATUMPORTVAR/$stratumport/" | sed "s/RPCPORTVAR/$rpcport/" | sed "s/RPCUSERVAR/$rpcuser/" | sed "s/RPCPASSVAR/$rpcpass/" > $poolconfigdir/$chain.json
@@ -77,7 +78,7 @@ listassetchains | while read chain; do
         echo "sudo ufw allow $stratumport comment 'Stratum $chain'" >> $ufwenablefile
         echo "sudo ufw delete allow $stratumport" >> $ufwdisablefile
 
-        let "stratumport = $stratumport + 1"
+        let "stratumport = $stratumport + 100"
     fi
 done
 
