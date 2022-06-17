@@ -2,8 +2,7 @@
 
 ## Table of Contents
 * [Differences between this and Z-NOMP](#differences-between-this-and-z-nomp)
-* [Using Docker (easy)](#using-docker-easy)
-* [Bare metal installation](#bare-metal-installation)
+* [Installation](#installation)
 * [More Config Information](#more-config-information)
 * [License](#license)
 
@@ -11,46 +10,9 @@
 * This is meant for Komodo mining
 * Founders, Treasury, and other ZEC/ZEN specific stuff is removed
 
-## Using Docker (easy)
-
-This method sets up 2 docker containers, one with knomp and one with redis.
-
-It will directly use your host system's network so you can connect to the coin daemon without opening up RPC beyond 127.0.0.1.
-
-The ports it listens on must not be in use, this includes 8080 for the website, 6379 for redis and any ports you open for stratums (default is 3333).
-
+## Installation
 ### Requirements
-[Install Docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
-
-### Docker Install
-```
-git clone https://github.com/webworker01/knomp.git
-cd ./knomp
-cp config_example.json config.json
-```
-
-Setup your [config.json](./config_example.json), `./coins/` and `./pool_configs/` in here, then:
-
-```
-docker-compose up &
-```
-
-### Docker stop
-```
-docker-compose down
-```
-
-### Docker rebuild and update
-```
-docker-compose down
-docker rmi knomp_knomp
-git pull
-docker-compose up &
-```
-
-## Bare metal installation
-### Requirements
-* node v10+
+* node v18+
 * libsodium
 * boost
 * Redis (see https://redis.io/topics/quickstart for details)
@@ -71,16 +33,17 @@ Some initial setup
 ```shell
 # The following packages are needed to build both Komodo and this stratum:
 sudo apt-get update
-sudo apt-get install build-essential pkg-config libc6-dev m4 g++-multilib autoconf libtool ncurses-dev unzip git python python-zmq zlib1g-dev wget libcurl4-openssl-dev bsdmainutils automake curl libboost-dev libboost-system-dev libsodium-dev jq redis-server nano -y
+sudo apt-get install build-essential pkg-config libc6-dev m4 g++-multilib autoconf libtool ncurses-dev unzip git python zlib1g-dev wget libcurl4-openssl-dev bsdmainutils automake curl libboost-dev libboost-system-dev libsodium-dev jq tmux redis-server -y
 ```
 Now, let's build Komodo
 ```shell
-git clone https://github.com/jl777/komodo -b dev
+git clone https://github.com/KomodoPlatform/komodo
 cd komodo
-zcutil/fetch-params.sh
+zcutil/fetch-params-alt.sh
 zcutil/build.sh -j8
 strip src/komodod
 strip src/komodo-cli
+sudo make install
 ```
 
 Now, let's run the assets. This will start ALL of the assets might take a day or so to sync, depending on system speed/network connection.
@@ -98,12 +61,12 @@ We need node and npm installed
 
 ```shell
 cd ~
-curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 ```
 
 Now, let's build our stratum and run it. This will install the pool and configure it for all the assetchains on your system automatically. It must be run from the same user as the coin deamons were launched, as it pulls the rpcuser/pass from the conf file in the home directory.
 ```shell
-git clone https://github.com/webworker01/knomp
+git clone https://github.com/TheComputerGenie/knomp
 cd knomp
 npm install
 cp config_example.json config.json (and configure it)
@@ -183,6 +146,7 @@ In pool_config:
 [Further info on config](https://github.com/zone117x/node-open-mining-portal#2-configuration) and some [sample configs](https://github.com/z-classic/z-nomp)
 
 ## License
+Reforked from webworker01 repo (needs finished)
 Forked from ComputerGenie repo (deleted)
 
 Released under the GNU General Public License v2

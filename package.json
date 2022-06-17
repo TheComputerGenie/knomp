@@ -9,15 +9,15 @@
         "poolserver",
         "komodo"
     ],
-    "homepage": "https://github.com/webworker01/knomp",
+    "homepage": "https://github.com/TheComputerGenie/knomp",
     "bugs": {
-        "url": "https://github.com/webworker01/knomp/issues"
+        "url": "https://github.com/TheComputerGenie/knomp/issues"
     },
     "license": "GPL-2.0",
-    "author": "webworker01",
+    "author": "ComputerGenie",
     "contributors": [
         "z-classic",
-        "ComputerGenie",
+        "webworker01",
         "webworker01"
     ],
     "main": "init.js",
@@ -26,7 +26,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/webworker01/knomp.git"
+        "url": "https://github.com/TheComputerGenie/knomp.git"
     },
     "dependencies": {
         "async": "^2.6.3",
@@ -45,7 +45,7 @@
         "nonce": "1.0.4",
         "redis": "3.1.1",
         "request": "2.88.2",
-        "stratum-pool": "github:webworker01/node-stratum-pool.git"
+        "stratum-pool": "github:thecomputergenie/node-stratum-pool.git"
     },
     "engines": {
         "node": ">=10"
